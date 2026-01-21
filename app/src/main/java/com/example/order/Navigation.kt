@@ -1,16 +1,23 @@
 package com.example.order
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.chatapp.LoginDataStore
 
 //Pages
 import com.example.order.pages.HomePage
 import com.example.order.pages.Cart
 import com.example.order.pages.Profile
 import com.example.order.pages.OrdersPage
+import com.example.order.pages.LandingPage
+import com.example.order.Restration.LoginScreen
+import com.example.order.pages.LoadingPage
+
 
 
 
@@ -21,7 +28,7 @@ fun Navigation() {
     val navController: NavHostController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "loading"
     ) {
         composable("home") {
             HomePage(navController=navController)
@@ -34,6 +41,21 @@ fun Navigation() {
         }
         composable("orders") {
             OrdersPage(navController=navController)
+        }
+        composable("landing") {
+            LandingPage( navController=navController)
+        }
+        composable("loading") {
+            LoadingPage(navController=navController)
+        }
+        composable("login") {
+            LoginScreen(navController=navController,
+                onLoginSuccess = {
+                    navController.navigate("home"){
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+                )
         }
     }
 }

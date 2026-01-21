@@ -19,13 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.order.R
 import com.example.order.components.CategoryChip
-import com.example.order.components.FoodBannerItem
-import com.example.order.components.ReviewsShowPage
 import androidx.navigation.NavHostController
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.TopAppBarDefaults
-
+import com.example.order.components.FoodCategoryCard
+import com.example.order.components.CategoryPage
 
 @Composable
 fun HomePage(navController: NavHostController) {
@@ -41,29 +39,29 @@ fun HomePage(navController: NavHostController) {
             .background(Color(0xFFFF6F00))
             .windowInsetsPadding(WindowInsets.statusBars.union(WindowInsets.navigationBars)),
 
-                bottomBar = {
-            NavigationBar(modifier = Modifier.
-            height(60.dp)
-                .windowInsetsPadding(WindowInsets.navigationBars),
+        bottomBar = {
+            NavigationBar(
+                modifier = Modifier.height(60.dp)
+                    .windowInsetsPadding(WindowInsets.navigationBars),
                 containerColor = Color.White
             ) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { navController.navigate("profile") },
                     icon = { Icon(Icons.Default.AccountCircle, contentDescription = "Profile") },
-                    label = { Text("Profile",color=Color.Black) }
+                    label = { Text("Profile", color = Color.Black) }
                 )
                 NavigationBarItem(
                     selected = true,
                     onClick = { navController.navigate("cart") },
                     icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "MY Cart") },
-                    label = { Text("MY Cart",color=Color.Black) }
+                    label = { Text("MY Cart", color = Color.Black) }
                 )
                 NavigationBarItem(
                     selected = true,
                     onClick = { navController.navigate("orders") },
                     icon = { Icon(Icons.Default.List, contentDescription = "Orders") },
-                    label = { Text("Orders",color=Color.Black) }
+                    label = { Text("Orders", color = Color.Black) }
                 )
             }
         }
@@ -102,20 +100,20 @@ fun HomePage(navController: NavHostController) {
                     }
                 }
             }
+            when (selectedCategory) {
 
-            // Dynamic Content
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    when (selectedCategory) {
-                        "All" -> repeat(10) { FoodItemCard() }
-                        "Category" -> repeat(10) { index -> FoodBannerItem(title = "Category Banner $index") }
-                        "Popular" -> repeat(10) { FoodItemCard() }
-                        "Restaurant Review" -> ReviewsShowPage()
+                "All" -> {
+                    item {
+                        FoodItemPage()
+                    }
+                }
+
+                "Category" -> {
+                    item {
+                        CategoryPage()
                     }
                 }
             }
         }
-
     }
 }
-
