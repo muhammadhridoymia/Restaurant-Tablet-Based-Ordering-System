@@ -1,10 +1,7 @@
-package com.example.order.pages
+package com.example.order.components
 
 import Food
 import FoodViewModel
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,16 +28,13 @@ import coil.compose.AsyncImage
 
 
 @Composable
-fun FoodItemPage() {
+fun PopularFoods() {
 
     val viewModel: FoodViewModel = viewModel()
     val foods = viewModel.foods
-    val loading = viewModel.loading
+    val popularFoods = foods.filter { it.popular && it.display }
 
-    // Fetch data ONCE
-    LaunchedEffect(Unit) {
-        viewModel.fetchFoods()
-    }
+    val loading = viewModel.loading
 
     if (loading) {
         CircularProgressIndicator()
@@ -48,8 +42,8 @@ fun FoodItemPage() {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            foods.forEach { food ->
-                FoodItemCard(food)
+            popularFoods.forEach { food ->
+                FoodCard(food)
             }
         }
     }
@@ -57,13 +51,12 @@ fun FoodItemPage() {
 
 
 @Composable
-fun FoodItemCard(food: Food) {
+fun FoodCard(food: Food) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp),
-        onClick = {  },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {

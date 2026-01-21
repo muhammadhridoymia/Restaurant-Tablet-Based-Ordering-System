@@ -17,7 +17,9 @@ data class Food(
     @SerializedName("_id") val id: String,
     val name: String,
     val price: Int,
-    val img: String
+    val img: String,
+    val display:Boolean,
+    val popular: Boolean,
 )
 data class FoodResponse(
     val success: Boolean,
@@ -40,6 +42,7 @@ class FoodViewModel : ViewModel() {
                 val response = foodapi.getFoods()
                 if (response.success) {
                     foods = response.foods
+                    println("Foods: $response")
                 }
             } catch (e: Exception) {
                 Log.e("FOOD", e.message ?: "Error fetching foods")

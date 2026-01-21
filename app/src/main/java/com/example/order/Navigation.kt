@@ -17,6 +17,7 @@ import com.example.order.pages.OrdersPage
 import com.example.order.pages.LandingPage
 import com.example.order.Restration.LoginScreen
 import com.example.order.pages.LoadingPage
+import com.example.order.pages.FoodCategoryListPage
 
 
 
@@ -47,6 +48,9 @@ fun Navigation() {
         }
         composable("loading") {
             LoadingPage(navController=navController)
+        }
+        composable("categorylist") {
+            FoodCategoryListPage()
         }
         composable("login") {
             LoginScreen(navController=navController,

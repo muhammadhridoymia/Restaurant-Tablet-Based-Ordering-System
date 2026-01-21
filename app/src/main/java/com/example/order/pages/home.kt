@@ -22,8 +22,8 @@ import com.example.order.components.CategoryChip
 import androidx.navigation.NavHostController
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
-import com.example.order.components.FoodCategoryCard
 import com.example.order.components.CategoryPage
+import com.example.order.components.PopularFoods
 
 @Composable
 fun HomePage(navController: NavHostController) {
@@ -110,9 +110,15 @@ fun HomePage(navController: NavHostController) {
 
                 "Category" -> {
                     item {
-                        CategoryPage()
+                        CategoryPage(navController)
                     }
                 }
+                "Popular" -> {
+                    item {
+                        PopularFoods()
+                    }
+                }
+
             }
         }
     }

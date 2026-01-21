@@ -11,7 +11,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -23,13 +22,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.order.R
 import coil.compose.AsyncImage
 
 
 
 @Composable
-fun CategoryPage() {
+fun CategoryPage(navController: NavHostController) {
     val viewModel: FoodCategoryViewModel = viewModel()
     val categories = viewModel.categories
     val loading = viewModel.loading
@@ -43,18 +43,21 @@ fun CategoryPage() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             categories.forEach { category ->
-                FoodCategoryCard(category)
+                FoodCategoryCard(category,navController)
             }
         }
     }
 }
 @Composable
-fun FoodCategoryCard(category: FoodCategory) {
+fun FoodCategoryCard(category: FoodCategory,navController: NavHostController) {
         Card(
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp),
+            onClick = {
+                navController.navigate("categorylist")
+            },
             elevation = CardDefaults.cardElevation(6.dp)
         ) {
             Box {
@@ -62,7 +65,7 @@ fun FoodCategoryCard(category: FoodCategory) {
                     model = category.img,
                     contentDescription = category.name,
                     modifier = Modifier
-                        .size(120.dp)
+                        .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
