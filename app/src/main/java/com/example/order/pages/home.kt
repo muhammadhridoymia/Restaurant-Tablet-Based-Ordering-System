@@ -1,5 +1,7 @@
 package com.example.order.pages
 
+import BannerViewModel
+import FoodViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,15 +24,24 @@ import com.example.order.components.CategoryChip
 import androidx.navigation.NavHostController
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.order.components.CategoryPage
 import com.example.order.components.PopularFoods
+import com.example.order.components.BannerImg
 
 @Composable
 fun HomePage(navController: NavHostController) {
 
     val categories = listOf("All", "Category", "Popular", "Restaurant Review")
     var selectedCategory by remember { mutableStateOf("All") }
+    val viewModel: BannerViewModel = viewModel()
+    val Banner= viewModel.Bannerdata
+    val loading = viewModel.loading
 
+    //fetch data onece
+    LaunchedEffect(Unit) {
+        viewModel.fetchBanners()
+    }
 
 
     Scaffold(
@@ -76,15 +87,7 @@ fun HomePage(navController: NavHostController) {
         ) {
             // Banner
             item {
-                Image(
-                    painter = painterResource(id = R.drawable.banner),
-                    contentDescription = "Restaurant Banner",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(150.dp, 190.dp)
-                        .clip(RoundedCornerShape(18.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                BannerImg()
             }
 
             // Categories

@@ -2,7 +2,7 @@ package com.example.order.pages
 
 import CategoryFoodListViewModel
 import Food
-import FoodViewModel
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,17 +17,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FoodCategoryListPage() {
+fun FoodCategoryListPage(navController: NavController) {
 
     val viewModel: CategoryFoodListViewModel = viewModel()
     val foods = viewModel.FoodList.value
@@ -37,9 +43,30 @@ fun FoodCategoryListPage() {
         viewModel.fetchFoodList("6970e72c8bdc240345b52995")
     }
 
-    Scaffold { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Food List",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6F00))
+            )
+        },
+    ) { padding ->
 
-        if (loading) {
+    if (loading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -52,7 +79,9 @@ fun FoodCategoryListPage() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
+                    .padding(padding)
+                    .background(Color(0xFFFF6F00)),
+                contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(foods.size) { index ->
@@ -70,6 +99,7 @@ fun FoodCard(food: Food) {
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp),
+        onClick = {  },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -85,13 +115,14 @@ fun FoodCard(food: Food) {
                 model = food.img,
                 contentDescription = food.name,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(170.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
+            // 🔹 Right: Details + Buttons
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
@@ -99,21 +130,50 @@ fun FoodCard(food: Food) {
 
                 Text(
                     text = food.name,
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                Text(
-                    text = "৳${food.price}",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Row (
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ){
+                    Text(
+                        text = "৳${food.price}",
+                        fontSize = 16.sp,
+                        color = Color(0xFFF5F5F5),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Button(
+                        onClick = { /* Add to Cart */ },
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(20.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(0.dp) // important
+                    ) {
+                        Text(
+                            text = "Add To Cart",
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
 
-                Button(
-                    onClick = { },
-                    modifier = Modifier.height(32.dp)
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("Add to Cart", fontSize = 12.sp)
+
+                    // Order Now button (primary)
+                    Button(
+                        onClick = { /* Order */ },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF8F00)
+                        )
+                    ) {
+                        Text("Order Now")
+                    }
                 }
             }
         }

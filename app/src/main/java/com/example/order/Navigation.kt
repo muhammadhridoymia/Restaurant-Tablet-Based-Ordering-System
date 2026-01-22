@@ -50,7 +50,7 @@ fun Navigation() {
             LoadingPage(navController=navController)
         }
         composable("categorylist") {
-            FoodCategoryListPage()
+            FoodCategoryListPage(navController=navController)
         }
         composable("login") {
             LoginScreen(navController=navController,
