@@ -25,7 +25,6 @@ interface FoodCategoryApiService {
     @GET("api/get/categories")
     suspend fun getFoodCategories(): FoodCategoryResponse
 }
-
 class FoodCategoryViewModel : ViewModel() {
     var categories by mutableStateOf<List<FoodCategory>>(emptyList())
         private set

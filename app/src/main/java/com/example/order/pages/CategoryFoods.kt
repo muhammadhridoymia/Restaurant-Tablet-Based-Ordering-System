@@ -33,14 +33,14 @@ import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FoodCategoryListPage(navController: NavController) {
+fun FoodCategoryListPage(navController: NavController,name:String,id:String) {
 
     val viewModel: CategoryFoodListViewModel = viewModel()
     val foods = viewModel.FoodList.value
     val loading = viewModel.loading.value
 
     LaunchedEffect(Unit) {
-        viewModel.fetchFoodList("6970e72c8bdc240345b52995")
+        viewModel.fetchFoodList(id)
     }
 
     Scaffold(
@@ -48,7 +48,7 @@ fun FoodCategoryListPage(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Food List",
+                        text = name,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )

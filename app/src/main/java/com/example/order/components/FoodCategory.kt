@@ -2,7 +2,6 @@ package com.example.order.components
 
 import FoodCategory
 import FoodCategoryViewModel
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.order.R
 import coil.compose.AsyncImage
 
 
@@ -56,7 +54,7 @@ fun FoodCategoryCard(category: FoodCategory,navController: NavHostController) {
                 .fillMaxWidth()
                 .height(140.dp),
             onClick = {
-                navController.navigate("categorylist")
+                navController.navigate("categorylist/${category.name}/${category.id}")
             },
             elevation = CardDefaults.cardElevation(6.dp)
         ) {

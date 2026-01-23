@@ -21,7 +21,13 @@ import com.example.order.pages.FoodCategoryListPage
 
 
 
-
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 @Composable
 fun Navigation() {
@@ -49,8 +55,17 @@ fun Navigation() {
         composable("loading") {
             LoadingPage(navController=navController)
         }
-        composable("categorylist") {
-            FoodCategoryListPage(navController=navController)
+        composable(
+            "categorylist/{name}/{id}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("id") { type = NavType.StringType }
+            )
+        ) {  backStackEntry ->
+            val name =backStackEntry.arguments?.getString("name")
+            val id =backStackEntry.arguments?.getString("id")
+
+            FoodCategoryListPage(navController=navController,name!!,id!!)
         }
         composable("login") {
             LoginScreen(navController=navController,
