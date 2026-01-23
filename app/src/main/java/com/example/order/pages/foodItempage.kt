@@ -59,6 +59,8 @@ fun FoodItemPage() {
 @Composable
 fun FoodItemCard(food: Food) {
 
+    val isAvailable = food.display
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -109,11 +111,13 @@ fun FoodItemCard(food: Food) {
                     )
                     Button(
                         onClick = { /* Add to Cart */ },
+                        enabled = isAvailable,
                         modifier = Modifier
                             .width(60.dp)
                             .height(20.dp),
                         shape = RoundedCornerShape(8.dp),
-                        contentPadding = PaddingValues(0.dp) // important
+                        contentPadding = PaddingValues(0.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isAvailable) Color(0xFFFF8F00) else Color.LightGray, disabledContainerColor = Color.LightGray)
                     ) {
                         Text(
                             text = "Add To Cart",
@@ -131,12 +135,11 @@ fun FoodItemCard(food: Food) {
                     // Order Now button (primary)
                     Button(
                         onClick = { /* Order */ },
+                        enabled = isAvailable,
                         shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF8F00)
-                        )
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isAvailable) Color(0xFFFF8F00) else Color.LightGray, disabledContainerColor = Color.LightGray)
                     ) {
-                        Text("Order Now")
+                        Text(if (isAvailable) "Order Now" else "Not Available", color = if (isAvailable) Color.White else Color.Gray)
                     }
                 }
             }
