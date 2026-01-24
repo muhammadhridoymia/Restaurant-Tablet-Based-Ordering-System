@@ -1,46 +1,39 @@
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 object RetrofitInstance {
+
     private const val BASE_URL = "http://192.168.0.108:5000/"
 
-    val api: LoginApiService by lazy {
+    private val retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(LoginApiService::class.java)
+    }
+
+    val api: LoginApiService by lazy {
+        retrofit.create(LoginApiService::class.java)
     }
 
     val foodapi: FoodApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(FoodApiService::class.java)
+        retrofit.create(FoodApiService::class.java)
     }
 
     val foodcategoryapi: FoodCategoryApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(FoodCategoryApiService::class.java)
+        retrofit.create(FoodCategoryApiService::class.java)
     }
+
     val categoryfoodlistapi: CategoryFoodApi by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(CategoryFoodApi::class.java)
+        retrofit.create(CategoryFoodApi::class.java)
     }
 
     val bannerapi: BannerApi by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(BannerApi::class.java)
+        retrofit.create(BannerApi::class.java)
     }
+    val orderapi: OrderApi by lazy {
+        retrofit.create(OrderApi::class.java)
+    }
+
 }
+
