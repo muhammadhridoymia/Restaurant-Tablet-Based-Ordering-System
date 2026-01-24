@@ -104,6 +104,7 @@ fun Popup(showpopup: MutableState<Boolean>, foodId: String, quantity: Int) {
 
                     Button(
                         onClick = { orderViewModel.submitOrder(foodId, quantity,userId,name) },
+                        enabled = !loading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(

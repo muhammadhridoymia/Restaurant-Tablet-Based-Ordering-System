@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -48,14 +50,14 @@ fun CategoryPage(navController: NavHostController) {
 }
 @Composable
 fun FoodCategoryCard(category: FoodCategory,navController: NavHostController) {
+
+
         Card(
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp),
-            onClick = {
-                navController.navigate("categorylist/${category.name}/${category.id}")
-            },
+            onClick = {  navController.navigate("categorylist/${category.name}/${category.id}") },
             elevation = CardDefaults.cardElevation(6.dp)
         ) {
             Box {

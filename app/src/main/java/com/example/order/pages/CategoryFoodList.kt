@@ -28,8 +28,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-
+import com.example.order.components.Popup
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,12 +65,12 @@ fun FoodCategoryListPage(navController: NavController,name:String,id:String) {
                         )
                     }
                 },
-                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6F00))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6F00))
             )
         },
     ) { padding ->
 
-    if (loading) {
+        if (loading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -95,15 +99,22 @@ fun FoodCategoryListPage(navController: NavController,name:String,id:String) {
 @Composable
 fun FoodCard(food: Food) {
 
+    val showpopup= remember { mutableStateOf(false) }
+    var quantity by remember { mutableStateOf(1) }
+
+    val isAvailable = food.display
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp),
-        onClick = {  },
+            .height(170.dp),
+        colors = if (isAvailable) CardDefaults.cardColors(containerColor = Color.DarkGray) else CardDefaults.cardColors(containerColor = Color.LightGray),
+        onClick = { },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-
+        if (showpopup.value){
+            Popup(showpopup,food.id,quantity)
+        }
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -145,6 +156,7 @@ fun FoodCard(food: Food) {
                     )
                     Button(
                         onClick = { /* Add to Cart */ },
+                        enabled = isAvailable,
                         modifier = Modifier
                             .width(60.dp)
                             .height(20.dp),
@@ -163,18 +175,48 @@ fun FoodCard(food: Food) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        Button(
+                            onClick = { if (quantity > 1) quantity-- },
+                            enabled = isAvailable,
+                            modifier = Modifier.size(20.dp),
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Text("-", fontSize = 14.sp)
+                        }
+
+                        Text(
+                            text = quantity.toString(),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Button(
+                            onClick = { quantity++ },
+                            enabled = isAvailable,
+                            modifier = Modifier.size(20.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                        ) {
+                            Text("+", fontSize = 14.sp, color = Color.Black)
+                        }
+                    }
+                }
 
                     // Order Now button (primary)
                     Button(
-                        onClick = { /* Order */ },
+                        onClick = { showpopup.value=true },
+                        enabled = isAvailable,
                         shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF8F00)
-                        )
+                        colors = ButtonDefaults.buttonColors(if (isAvailable) Color(0xFFFF8F00) else Color.LightGray)
                     ) {
-                        Text("Order Now")
+                        Text(if (isAvailable) "Order Now" else "Not Available", color = Color.White)
                     }
-                }
+
             }
         }
     }

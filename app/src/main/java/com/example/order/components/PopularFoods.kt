@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -24,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.order.R
 import coil.compose.AsyncImage
+import com.example.order.components.Popup
 
 
 
@@ -53,14 +58,21 @@ fun PopularFoods() {
 @Composable
 fun FoodCard(food: Food) {
 
+    val showpopup= remember { mutableStateOf(false) }
+    val isAvailable = food.display
+    var quantity by remember { mutableStateOf(1) }
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp),
+            .height(170.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-
+        if (isAvailable) {
+            Popup(showpopup, food.id, quantity)
+        }
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -120,10 +132,34 @@ fun FoodCard(food: Food) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Button(
+                        onClick = { if (quantity > 1) quantity-- },
+                        enabled = isAvailable,
+                        modifier = Modifier.size(20.dp),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text("-", fontSize = 14.sp)
+                    }
 
+                    Text(
+                        text = quantity.toString(),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Button(
+                        onClick = { quantity++ },
+                        enabled = isAvailable,
+                        modifier = Modifier.size(20.dp),
+                        contentPadding = PaddingValues(0.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                    ) {
+                        Text("+", fontSize = 14.sp, color = Color.Black)
+                    }
+                }
                     // Order Now button (primary)
                     Button(
-                        onClick = { /* Order */ },
+                        onClick = { showpopup.value=true },
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFFF8F00)
@@ -131,7 +167,7 @@ fun FoodCard(food: Food) {
                     ) {
                         Text("Order Now")
                     }
-                }
+
             }
         }
     }
