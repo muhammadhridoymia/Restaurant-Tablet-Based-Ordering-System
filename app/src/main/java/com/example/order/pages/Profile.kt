@@ -6,9 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,10 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.chatapp.LoginDataStore
-
-import androidx.compose.runtime.rememberCoroutineScope
 import coil.compose.AsyncImage
+import com.example.chatapp.LoginDataStore
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,15 +25,16 @@ import kotlinx.coroutines.launch
 fun Profile(navController: NavController) {
 
     val coroutineScope = rememberCoroutineScope()
-
     val context = LocalContext.current
-    val name = LoginDataStore.getName(context).collectAsState(initial = "User Name").value
-    val img = LoginDataStore.getImg(context).collectAsState(initial = "").value
 
-    LaunchedEffect(img) {
-        println("PROFILE IMAGE URL = $img")
-    }
+    val name = LoginDataStore.getName(context)
+        .collectAsState(initial = "User Name").value
 
+    val img = LoginDataStore.getImg(context)
+        .collectAsState(initial = "").value
+
+    // 🔒 Navigation lock (THE REAL FIX)
+    val isNavigating = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -50,7 +47,13 @@ fun Profile(navController: NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(
+                        enabled = !isNavigating.value,
+                        onClick = {
+                            isNavigating.value = true
+                            navController.popBackStack()
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -58,10 +61,13 @@ fun Profile(navController: NavController) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6F00))
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFFFF6F00)
+                )
             )
-        },
+        }
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,12 +77,11 @@ fun Profile(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp)) // top spacing
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 🔹 Profile Section
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AsyncImage(
@@ -88,18 +93,18 @@ fun Profile(navController: NavController) {
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     text = name,
                     fontSize = 22.sp,
+                    fontWeight = FontWeight.Medium,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(4.dp))
             }
 
-            // 🔹 Logout Button at Bottom
+            // 🔹 Logout Button
             Button(
                 onClick = {
-                    // Launch coroutine to clear DataStore
                     coroutineScope.launch {
                         LoginDataStore.clearUser(context)
                         navController.navigate("landing") {
@@ -109,9 +114,11 @@ fun Profile(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .height(70.dp)
+                    .height(60.dp)
                     .padding(bottom = 24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6F00)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF6F00)
+                ),
                 shape = MaterialTheme.shapes.medium
             ) {
                 Text(

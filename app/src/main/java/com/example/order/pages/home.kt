@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.order.SocketManager
 import com.example.order.components.CategoryPage
 import com.example.order.components.PopularFoods
 import com.example.order.components.BannerImg
@@ -40,6 +41,7 @@ fun HomePage(navController: NavHostController) {
 
     //fetch data onece
     LaunchedEffect(Unit) {
+        //fetch Banner
         viewModel.fetchBanners()
     }
 
@@ -54,7 +56,7 @@ fun HomePage(navController: NavHostController) {
             NavigationBar(
                 modifier = Modifier.height(60.dp)
                     .windowInsetsPadding(WindowInsets.navigationBars),
-                containerColor = Color.White
+                containerColor = Color(0xFFFF6F00)
             ) {
                 NavigationBarItem(
                     selected = true,

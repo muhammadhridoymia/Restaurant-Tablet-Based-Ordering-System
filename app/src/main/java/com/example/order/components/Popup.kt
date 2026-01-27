@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chatapp.LoginDataStore
+import com.example.order.SocketManager
 
 
 @Composable
@@ -47,6 +48,12 @@ fun Popup(showpopup: MutableState<Boolean>, foodId: String, quantity: Int) {
         orderViewModel.resetPopup()
         showpopup.value = false
     }
+
+    fun orderSubmit() {
+        orderViewModel.submitOrder(foodId, quantity, userId, name)
+        SocketManager.OrderSupmit()
+    }
+
 
 
 
@@ -75,7 +82,14 @@ fun Popup(showpopup: MutableState<Boolean>, foodId: String, quantity: Int) {
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Button(onClick = { closePopup() }, modifier = Modifier.fillMaxWidth(),) {
+                        Button(
+                            onClick = { closePopup() },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White,
+                                contentColor = Color.Black
+                            ),
+                            ) {
                             Text("Back")
                         }
                     }
@@ -103,12 +117,13 @@ fun Popup(showpopup: MutableState<Boolean>, foodId: String, quantity: Int) {
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = { orderViewModel.submitOrder(foodId, quantity,userId,name) },
+                        onClick = { orderSubmit() },
                         enabled = !loading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF8F00)
+                            containerColor = Color(0xFF4CAF50), // Green
+                            contentColor = Color.White
                         )
                     ) {
                         if (loading) {
@@ -123,8 +138,15 @@ fun Popup(showpopup: MutableState<Boolean>, foodId: String, quantity: Int) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Button(onClick = { showpopup.value = false }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                        Text("Cancel", color = Color.Gray)
+                    Button(
+                        onClick = { showpopup.value = false },
+                        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text("Cancel", color = Color.Black)
                     }
                 }
             }
