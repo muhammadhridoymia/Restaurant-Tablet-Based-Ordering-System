@@ -20,6 +20,7 @@ data class Food(
     val img: String,
     val display:Boolean,
     val popular: Boolean,
+    var quantity: Int,
 )
 data class FoodResponse(
     val success: Boolean,

@@ -1,6 +1,7 @@
 package com.example.order.pages
 
 import BannerViewModel
+import CartViewModel
 import FoodViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +32,7 @@ import com.example.order.components.PopularFoods
 import com.example.order.components.BannerImg
 
 @Composable
-fun HomePage(navController: NavHostController) {
+fun HomePage(navController: NavHostController,cartViewModel: CartViewModel) {
 
     val categories = listOf("All", "Category", "Popular", "Restaurant Review")
     var selectedCategory by remember { mutableStateOf("All") }
@@ -109,7 +110,7 @@ fun HomePage(navController: NavHostController) {
 
                 "All" -> {
                     item {
-                        FoodItemPage()
+                        FoodItemPage(cartViewModel)
                     }
                 }
 

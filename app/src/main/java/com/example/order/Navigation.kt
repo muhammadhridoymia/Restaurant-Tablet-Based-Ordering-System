@@ -1,5 +1,6 @@
 package com.example.order
 
+import CartViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,7 @@ import com.example.order.pages.FoodCategoryListPage
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -33,16 +35,19 @@ import androidx.navigation.navArgument
 @Composable
 fun Navigation() {
 
+    val cartViewModel: CartViewModel = viewModel()
+
+
     val navController: NavHostController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = "loading"
     ) {
         composable("home") {
-            HomePage(navController=navController)
+            HomePage(navController=navController,cartViewModel)
         }
         composable("cart") {
-            Cart(navController=navController)
+            Cart(navController=navController,cartViewModel)
         }
         composable("profile") {
             Profile(navController=navController)

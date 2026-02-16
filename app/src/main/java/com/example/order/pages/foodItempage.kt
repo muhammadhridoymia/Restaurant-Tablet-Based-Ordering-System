@@ -1,8 +1,9 @@
 package com.example.order.pages
 
+import CartViewModel
 import Food
 import FoodViewModel
-import OrderViewModel
+import android.graphics.Color.rgb
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,13 +11,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,15 +27,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import com.example.chatapp.LoginDataStore
 import com.example.order.components.Popup
 
 
 
 
 @Composable
-fun FoodItemPage() {
+fun FoodItemPage( cartViewModel: CartViewModel) {
 
     val viewModel: FoodViewModel = viewModel()
     val foods = viewModel.foods
@@ -55,7 +51,7 @@ fun FoodItemPage() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             foods.forEach { food ->
-                FoodItemCard(food)
+                FoodItemCard(food,cartViewModel)
             }
         }
     }
@@ -63,7 +59,11 @@ fun FoodItemPage() {
 
 
 @Composable
-fun FoodItemCard(food: Food) {
+fun FoodItemCard(food: Food,cartViewModel: CartViewModel) {
+
+    val cartfood=cartViewModel.cartItems
+    val isInCart = cartfood.any { it.food.id == food.id }
+
 
 
     val showpopup= remember { mutableStateOf(false) }
@@ -122,20 +122,21 @@ fun FoodItemCard(food: Food) {
                         fontWeight = FontWeight.SemiBold
                     )
                     Button(
-                        onClick = { /* Add to Cart */ },
+                        onClick = { cartViewModel.addToCart(food, quantity) },
                         enabled = isAvailable,
                         modifier = Modifier
                             .width(60.dp)
                             .height(20.dp),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(0.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = if (isAvailable) Color(0xFFFF8F00) else Color.LightGray, disabledContainerColor = Color.LightGray)
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isInCart) Color(rgb(43, 251, 105)) else Color.LightGray, disabledContainerColor = Color.White)
                     ) {
                         Text(
-                            text = "Add To Cart",
+                            text = if (isInCart) "In Cart" else "Add To Cart",
                             fontSize = 8.sp,
                             fontWeight = FontWeight.SemiBold
                         )
+
                     }
 
                 }
