@@ -1,8 +1,8 @@
 package com.example.order.pages
 
+import CartItem
 import CartViewModel
 import Food
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,7 +11,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,16 +22,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.order.R
 
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+
+
+import OrderViewModel
+import android.R
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,9 +49,17 @@ import coil.compose.AsyncImage
 fun Cart(navController: NavController,cartViewModel: CartViewModel) {
 
     val cartItems = cartViewModel.cartItems
-
     val itemCount = cartItems.size
     val totalPrice = cartItems.sumOf { it.food.price * it.quantity }
+
+    val loading = remember { mutableStateOf(false) }
+    val popupMessage = remember { mutableStateOf<String?>(null) }
+    val success = remember { mutableStateOf(false) }
+    
+
+
+
+
 
     Scaffold(
         // 🔹 TOP BAR
@@ -88,7 +105,7 @@ fun Cart(navController: NavController,cartViewModel: CartViewModel) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(cartItems.size) {
-                Items( food = cartItems[it].food, quantity = cartItems[it].quantity)
+                Items( food = cartItems[it].food, quantity = cartItems[it].quantity,cartViewModel)
             }
         }
     }
@@ -97,20 +114,19 @@ fun Cart(navController: NavController,cartViewModel: CartViewModel) {
 
 
 @Composable
-fun Items( food: Food, quantity: Int) {
+fun Items( food: Food, quantity: Int,cartViewModel: CartViewModel) {
     val quantity = remember { mutableStateOf(quantity) }
     val isAvailable = food.display
 
-    fun increaseQuantity() {
+    fun increaseQuantity(id: String) {
+        cartViewModel.increaseQuantity(id)
         quantity.value++
     }
 
-    fun decreaseQuantity() {
-        if (quantity.value > 1) {
-            quantity.value--
-        }
+    fun decreaseQuantity(id: String) {
+        cartViewModel.decreaseQuantity(id)
+        quantity.value--
     }
-
 
 
     Card(
@@ -163,7 +179,7 @@ fun Items( food: Food, quantity: Int) {
                 ) {
 
                     Button(
-                        onClick = { decreaseQuantity()},
+                        onClick = { decreaseQuantity( food.id)},
                         enabled = isAvailable,
                         modifier = Modifier.size(20.dp),
                         contentPadding = PaddingValues(0.dp)
@@ -178,7 +194,7 @@ fun Items( food: Food, quantity: Int) {
                     )
 
                     Button(
-                        onClick = { increaseQuantity()},
+                        onClick = { increaseQuantity(food.id)},
                         enabled = isAvailable,
                         modifier = Modifier.size(20.dp),
                         contentPadding = PaddingValues(0.dp),

@@ -1,17 +1,9 @@
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatapp.LoginDataStore
 import kotlinx.coroutines.launch
 import retrofit2.http.Body
 import retrofit2.http.POST
-import androidx.compose.ui.platform.LocalContext
-
-
-
-
 
 data class OrderItem(
     val foodId: String,
