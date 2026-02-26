@@ -30,11 +30,12 @@ import com.example.order.SocketManager
 import com.example.order.components.CategoryPage
 import com.example.order.components.PopularFoods
 import com.example.order.components.BannerImg
+import com.example.order.components.PostScreen
 
 @Composable
 fun HomePage(navController: NavHostController,cartViewModel: CartViewModel) {
 
-    val categories = listOf("All", "Category", "Popular", "Restaurant Review")
+    val categories = listOf("All", "Category", "Popular", "Restaurant Post","About")
     var selectedCategory by remember { mutableStateOf("All") }
     val viewModel: BannerViewModel = viewModel()
     val Banner= viewModel.Bannerdata
@@ -122,6 +123,11 @@ fun HomePage(navController: NavHostController,cartViewModel: CartViewModel) {
                 "Popular" -> {
                     item {
                         PopularFoods()
+                    }
+                }
+                "Restaurant Post" -> {
+                    item {
+                        PostScreen()
                     }
                 }
 
