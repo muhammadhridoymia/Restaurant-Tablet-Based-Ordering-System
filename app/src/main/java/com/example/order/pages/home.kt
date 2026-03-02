@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.order.SocketManager
+import com.example.order.components.AboutRestaurantScreen
 import com.example.order.components.CategoryPage
 import com.example.order.components.PopularFoods
 import com.example.order.components.BannerImg
@@ -128,6 +129,11 @@ fun HomePage(navController: NavHostController,cartViewModel: CartViewModel) {
                 "Restaurant Post" -> {
                     item {
                         PostScreen()
+                    }
+                }
+                "About" -> {
+                    item {
+                        AboutRestaurantScreen()
                     }
                 }
 
